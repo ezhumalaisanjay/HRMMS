@@ -1,8 +1,8 @@
-import "@/styles/app.css";
 import type { AppProps } from "next/app";
 import { Amplify } from "aws-amplify";
 import outputs from "@/amplify_outputs.json";
 import "@aws-amplify/ui-react/styles.css";
+import "../styles/globals.css"
 
 Amplify.configure(outputs);
 
