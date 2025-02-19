@@ -1,58 +1,58 @@
-import * as AmazonCognitoIdentity from 'amazon-cognito-identity-js';
-import { useRouter } from 'next/router'; // Import Next.js Router
-// Define the pool data for Cognito User Pool
+import * as AmazonCognitoIdentity from "amazon-cognito-identity-js";
+import { useRouter } from "next/router"; // Import Next.js Router
+
 const poolData = {
-    UserPoolId: process.env.NEXT_PUBLIC_USER_POOL_ID, // Your Cognito User Pool ID
-    ClientId: process.env.NEXT_PUBLIC_CLIENT_ID, // Your Cognito App Client ID
-  };
-  
-  const userPool = new AmazonCognitoIdentity.CognitoUserPool(poolData);
-  
-  // ✅ Sign-In Function
-  export const signIn = (email, password) => {
-    return new Promise((resolve, reject) => {
-      const userData = {
-        Username: email,
-        Pool: userPool,
-      };
-  
-      const cognitoUser = new AmazonCognitoIdentity.CognitoUser(userData);
-      const authDetails = new AmazonCognitoIdentity.AuthenticationDetails({
-        Username: email,
-        Password: password,
-      });
-  
-      cognitoUser.authenticateUser(authDetails, {
-        onSuccess: (result) => {
-          console.log('Sign-in successful:', result);
-  
-          // Redirect to the HR Dashboard on successful login
-          const router = useRouter();
-          router.push('/hr/dashboard');  // Redirect to the HR Dashboard page
-  
-          resolve(result);
-        },
-        onFailure: (err) => {
-          console.error('Sign-in error:', err.message);
-          reject(err);
-        },
-      });
+  UserPoolId: process.env.NEXT_PUBLIC_USER_POOL_ID, // Your Cognito User Pool ID
+  ClientId: process.env.NEXT_PUBLIC_CLIENT_ID, // Your Cognito App Client ID
+};
+
+const userPool = new AmazonCognitoIdentity.CognitoUserPool(poolData);
+
+// ✅ Sign-In Function
+export const signIn = (email, password, router) => {
+  return new Promise((resolve, reject) => {
+    const userData = { Username: email, Pool: userPool };
+    const cognitoUser = new AmazonCognitoIdentity.CognitoUser(userData);
+    const authDetails = new AmazonCognitoIdentity.AuthenticationDetails({
+      Username: email,
+      Password: password,
     });
-  };
+
+    cognitoUser.authenticateUser(authDetails, {
+      onSuccess: (result) => {
+        console.log("Sign-in successful:", result);
+window.location.href = "/dashboard";
+
+        resolve(result);
+      },
+      onFailure: (err) => {
+        console.error("Sign-in error:", err.message);
+        reject(err);
+      },
+    });
+  });
+};
+
 // ✅ Sign-Up Function
 export const signUp = (email, password, name) => {
   return new Promise((resolve, reject) => {
     const attributeList = [
-      new AmazonCognitoIdentity.CognitoUserAttribute({ Name: 'email', Value: email }),
-      new AmazonCognitoIdentity.CognitoUserAttribute({ Name: 'name', Value: name }),
+      new AmazonCognitoIdentity.CognitoUserAttribute({
+        Name: "email",
+        Value: email,
+      }),
+      new AmazonCognitoIdentity.CognitoUserAttribute({
+        Name: "name",
+        Value: name,
+      }),
     ];
 
     userPool.signUp(email, password, attributeList, null, (err, result) => {
       if (err) {
-        console.error('Sign-up error:', err.message);
+        console.error("Sign-up error:", err.message);
         reject(err);
       } else {
-        console.log('Sign-up successful:', result.user);
+        console.log("Sign-up successful:", result.user);
         resolve(result.user);
       }
     });
@@ -71,10 +71,10 @@ export const confirmSignUp = async (email, code) => {
 
     cognitoUser.confirmRegistration(code, true, (err, result) => {
       if (err) {
-        console.error('Confirm sign-up error:', err.message);
+        console.error("Confirm sign-up error:", err.message);
         reject(err);
       } else {
-        console.log('Confirmation successful', result);
+        console.log("Confirmation successful", result);
         resolve(result);
       }
     });
