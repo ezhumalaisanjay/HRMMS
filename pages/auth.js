@@ -21,7 +21,7 @@ export const signIn = (email, password, router) => {
     cognitoUser.authenticateUser(authDetails, {
       onSuccess: (result) => {
         console.log("Sign-in successful:", result);
-window.location.href = "/dashboard";
+        window.location.href = "/dashboard";
 
         resolve(result);
       },
