@@ -3,7 +3,7 @@ import { Tabs } from "@aws-amplify/ui-react"
 import { Building2, CalendarDays, MapPin } from "lucide-react"
 import UserDetails from "./user-details"
 import Image from "next/image"
-import bgProfileCover from "../../images/bg-profile-cover.jpg"
+// import bgProfileCover from "../../images/bg-profile-cover.jpg"
 import { useState } from "react"
 import { format } from "date-fns"
 
@@ -47,7 +47,7 @@ function Profile() {
     <>
       <div className="m-4 min-h-screen flex flex-col font-sans">
         <div className="flex items-center m-4 justify-center relative lg:h-[160px] h-[120px]">
-          <Image src={bgProfileCover} alt="cover Image" objectFit="cover" layout="fill" className=" rounded-lg" />
+          
           <div className="w-[130px] h-[130px] rounded-full border-white border-4 mt-14 lg:mt-24 z-40 relative bg-slate-100">
             <Image src={"https://avatars.dicebear.com/api/adventurer-neutral/mail%40ashallendesign.co.uk.svg"} width={100} height={100} alt="profile" className="absolute w-full object-cover left-0 rounded-full"/>
           </div>
