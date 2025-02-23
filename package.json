@@ -6,7 +6,11 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+   
+  "build": "NODE_OPTIONS='--max-old-space-size=8192' next build"
+
+
   },
   "dependencies": {
     "@aws-amplify/auth": "^6.11.0",
