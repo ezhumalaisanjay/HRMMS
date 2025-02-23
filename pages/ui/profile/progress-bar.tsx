@@ -1,55 +1,52 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 
 interface ProgressBarProps {
   progress: string;
 }
 
 const ProgressBar: React.FC<ProgressBarProps> = ({ progress }) => {
-  const [progressPercent, setProgressPercent] = useState<number>(0)
+  const [progressPercent, setProgressPercent] = useState<number>(0);
 
   const getProgressColor = (progress: number): string => {
-    if (progress < 25) {
-      return '#f87171';  // If progress is less than 25%, set color to red
-    } else if (progress < 50) {
-      return '#ffb84d';  // If progress is less than 50%, set color to orange
-    } else if (progress < 75) {
-      return '#ffff66';  // If progress is less than 75%, set color to yellow
-    } else {
-      return '#66ff66';  // If progress is 75% or more, set color to green
-    }
+    if (progress < 25) return "#f87171"; // Red
+    if (progress < 50) return "#ffb84d"; // Orange
+    if (progress < 75) return "#ffff66"; // Yellow
+    return "#66ff66"; // Green
   };
 
   // Using React.CSSProperties for typing the style object
   const containerStyle: React.CSSProperties = {
-    position: 'relative',
-    width: '80%',
-    height: '5px',
-    backgroundColor: '#e0e0df',
-    borderRadius: '5px',
-    overflow: 'hidden',
+    position: "relative",
+    width: "80%",
+    height: "5px",
+    backgroundColor: "#e0e0df",
+    borderRadius: "5px",
+    overflow: "hidden",
   };
 
   const barStyle: React.CSSProperties = {
-    height: '100%',
-    backgroundColor: getProgressColor(Number(progress)),
-    transition: 'width 0.5s ease-out',
+    height: "100%",
+    backgroundColor: getProgressColor(progressPercent),
+    transition: "width 0.5s ease-out",
     width: `${progressPercent}%`,
   };
 
-  
   useEffect(() => {
+    const targetProgress = Number(progress);
+    setProgressPercent(0); // Reset progress when `progress` changes
+
     const interval = setInterval(() => {
       setProgressPercent((prev) => {
-        if (prev <= Number(progress)) {
-          clearInterval(interval); // Stop the interval once progress reaches 100%
-          return Number(progress);
+        if (prev >= targetProgress) {
+          clearInterval(interval); // Stop when reaching the target
+          return targetProgress;
         }
-        return prev + 5; // Adjust this number for speed of progress
+        return prev + 5; // Adjust this value for animation speed
       });
-    }, 500); // Update the progress every 500ms
+    }, 100);
 
-    return () => clearInterval(interval);
-  }, [])
+    return () => clearInterval(interval); // Cleanup interval on component unmount or when `progress` changes
+  }, [progress]); // ✅ Added `progress` as a dependency
 
   return (
     <div style={containerStyle}>
