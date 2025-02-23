@@ -10,11 +10,11 @@ frontend:
   phases:
     preBuild:
       commands:
-        - export NODE_OPTIONS="--max-old-space-size=8192"
+        - export NODE_OPTIONS="--max-old-space-size=5632"
         - npm ci --prefer-offline
     build:
       commands:
-        - npm run build --max-old-space-size=8192
+        - npm run build --max-old-space-size=5632
   artifacts:
     baseDirectory: .next
     files:
