@@ -2,7 +2,6 @@ import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
 import { ThemeProvider } from "@/components/ui/theme-provider"
 import SiteHeader from "@/pages/ui/header/index"
 import AppSidebar from "@/pages/ui/sidebar/index"
-import TenetDashboard from "@/pages/ui/tenet-dashboard"
 import { Frame, PieChart } from "lucide-react"
 import { useState } from "react"
 
@@ -17,12 +16,17 @@ export default function Dashboard() {
     projects: [
       {
         name: "Dashboard",
-        url: "/tenet/dashboard",
+        url: "/employee/dashboard",
         icon: Frame,
       },
       {
-        name: "Other",
-        url: "/tenet/other",
+        name: "Profile",
+        url: "/employee/profile",
+        icon: PieChart,
+      },
+      {
+        name: "Leave Tracker",
+        url: "/employee/leavetracker",
         icon: PieChart,
       },
     ],
@@ -48,7 +52,7 @@ export default function Dashboard() {
             <AppSidebar data={data} isActive={isActive} handleClick={handleClick}/>
             <SidebarInset>
               <div className="flex flex-1 flex-col gap-4 mt-10 p-4">
-                <TenetDashboard />
+                UnderContruction..
               </div>
             </SidebarInset>
           </div>

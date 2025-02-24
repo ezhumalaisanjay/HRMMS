@@ -23,6 +23,8 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
+import { useState } from "react";
+import Link from "next/link";
 
 interface Project {
   name: string;
@@ -30,25 +32,36 @@ interface Project {
   icon: LucideIcon;
 }
 
+interface NavProjectsProps {
+  projects?: Project[];
+  isActive: number;
+  handleClick: (id: number) => void;
+}
+
 export default function NavProjects({
   projects = [],
-}: {
-  projects?: Project[];
-}) {
+  isActive,
+  handleClick,
+}: NavProjectsProps ) {
   const { isMobile } = useSidebar();
 
+  if (!Array.isArray(projects)) {
+    return <p>No pages available.</p>;
+  }
+
   return (
-    <SidebarGroup className="group-data-[collapsible=icon]:hidden">
-      <SidebarGroupLabel>Projects</SidebarGroupLabel>
+    <SidebarGroup className="group-data-[collapsible=icon]">
+      <SidebarGroupLabel>Pages</SidebarGroupLabel>
       <SidebarMenu>
         {projects.length > 0 ? (
-          projects.map((item) => (
-            <SidebarMenuItem key={item.name}>
+          projects.map((item, index) => (
+            <SidebarMenuItem key={item.name} className={index === isActive ? "font-bold" : ""} 
+            onClick={() => handleClick(index)}>
               <SidebarMenuButton asChild>
-                <a href={item.url}>
+                <Link href={item.url}>
                   <item.icon />
                   <span>{item.name}</span>
-                </a>
+                </Link>
               </SidebarMenuButton>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -82,12 +95,6 @@ export default function NavProjects({
         ) : (
           <p className="text-muted-foreground p-2">No projects available.</p>
         )}
-        <SidebarMenuItem>
-          <SidebarMenuButton>
-            <MoreHorizontal />
-            <span>More</span>
-          </SidebarMenuButton>
-        </SidebarMenuItem>
       </SidebarMenu>
     </SidebarGroup>
   );

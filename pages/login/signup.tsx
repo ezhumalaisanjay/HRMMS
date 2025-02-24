@@ -63,8 +63,8 @@ export default function Signup({ handleLogin } : LoginComponent) {
   };
 
   return (
-    <div className="flex justify-center items-center h-screen bg-gray-100">
-      <div className="bg-white p-8 rounded-lg shadow-md w-96">
+    <div className="flex justify-center items-center h-screen">
+      <div className="p-8 rounded-lg shadow-md w-96">
         <div className="flex flex-col items-center text-center mb-4">
           <Image src={Logo} alt="logo" width={200} height={200} />
         </div>
@@ -87,6 +87,14 @@ export default function Signup({ handleLogin } : LoginComponent) {
                   type="email"
                   name="email"
                   placeholder="Email"
+                  onChange={handleChange}
+                  required
+                />
+                <Label>Phone Number</Label>
+                <Input
+                  type="phoneNo"
+                  name="phoneNo"
+                  placeholder="Phone No"
                   onChange={handleChange}
                   required
                 />
@@ -122,7 +130,7 @@ export default function Signup({ handleLogin } : LoginComponent) {
                 onChange={(e) => setConfirmationCode(e.target.value)}
                 required
               />
-              <Button type="submit" className="w-full text-white p-2 rounded">
+              <Button type="submit" className="w-full p-2 rounded">
                 {isConfirmed ? <> <Loader className="animate-spin" /> Confirming Signup </> : "Confirm Signup" }
               </Button>
             </div>
@@ -133,7 +141,7 @@ export default function Signup({ handleLogin } : LoginComponent) {
 
         {!isSignupCompleted && (
           <div className="mt-4 text-sm text-center">
-            Already have an account? <span onClick={handleLogin} className="text-black underline hover:cursor-pointer">Sign In</span>
+            Already have an account? <span onClick={handleLogin} className="underline hover:cursor-pointer">Sign In</span>
           </div>
         )}
       </div>

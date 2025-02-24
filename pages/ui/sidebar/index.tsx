@@ -1,21 +1,7 @@
 "use client"
 
 import * as React from "react"
-import {
-  BookOpen,
-  Bot,
-  Command,
-  Frame,
-  LifeBuoy,
-  Map,
-  PieChart,
-  Send,
-  Settings2,
-  SquareTerminal,
-} from "lucide-react"
-import NavMain from "./nav-main"
 import NavProjects from "./nav-projects"
-import NavSecondary from "./nav-secondary"
 import NavUser from "./nav-user"
 import {
   Sidebar,
@@ -28,159 +14,61 @@ import {
 } from "@/components/ui/sidebar"
 import Image from "next/image"
 import smallLogo from "../../images/smallLogo.png"
+import { LucideIcon } from "lucide-react"
 
-const data = {
-  user: {
-    name: "shadcn",
-    email: "m@example.com",
-    avatar: "/avatars/shadcn.jpg",
-  },
-  navMain: [
-    {
-      title: "User Profile",
-      url: "#",
-      icon: SquareTerminal,
-      isActive: true,
-      items: [
-        {
-          title: "Profile",
-          url: "#",
-        },
-        {
-          title: "Team",
-          url: "#",
-        },
-        {
-          title: "Projects",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Models",
-      url: "#",
-      icon: Bot,
-      items: [
-        {
-          title: "Genesis",
-          url: "#",
-        },
-        {
-          title: "Explorer",
-          url: "#",
-        },
-        {
-          title: "Quantum",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Documentation",
-      url: "#",
-      icon: BookOpen,
-      items: [
-        {
-          title: "Introduction",
-          url: "#",
-        },
-        {
-          title: "Get Started",
-          url: "#",
-        },
-        {
-          title: "Tutorials",
-          url: "#",
-        },
-        {
-          title: "Changelog",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Settings",
-      url: "#",
-      icon: Settings2,
-      items: [
-        {
-          title: "General",
-          url: "#",
-        },
-        {
-          title: "Team",
-          url: "#",
-        },
-        {
-          title: "Billing",
-          url: "#",
-        },
-        {
-          title: "Limits",
-          url: "#",
-        },
-      ],
-    },
-  ],
-  navSecondary: [
-    {
-      title: "Support",
-      url: "#",
-      icon: LifeBuoy,
-    },
-    {
-      title: "Feedback",
-      url: "#",
-      icon: Send,
-    },
-  ],
-  projects: [
-    {
-      name: "Design Engineering",
-      url: "#",
-      icon: Frame,
-    },
-    {
-      name: "Sales & Marketing",
-      url: "#",
-      icon: PieChart,
-    },
-    {
-      name: "Travel",
-      url: "#",
-      icon: Map,
-    },
-  ],
+interface User {
+  name: string;
+  email: string;
+  avatar: string;
 }
 
-export default function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+interface Project {
+  name: string;
+  url: string;
+  icon: LucideIcon; // React component for the icon
+}
+
+interface Data {
+  user: User;
+  projects: Project[];
+}
+
+interface AppSidebarProps {
+  data: Data; // The type of data prop
+  isActive: number;
+  handleClick: (id: number) => void;
+}
+
+export default function AppSidebar({data, isActive, handleClick} : AppSidebarProps) {
+  
+  if (!data || !data.projects) {
+    // Handle the error or return a fallback
+    return <p>No projects available.</p>;
+  }
+
   return (
     <Sidebar
       collapsible="icon"
       className="top-[--header-height] !h-[calc(100svh-var(--header-height))]"
-      {...props}
     >
-      <SidebarHeader>
+      <SidebarHeader className="m-0 p-0 flex justify-center">
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton size="lg" asChild>
-              <a href="#">
+            <div className="bg-white p-1">
+              <div className="flex gap-2 items-center">
                 <div>
-                  <Image src={smallLogo} alt="logo" objectFit="cover" width={50} height={50} className="ml-1 rounded-lg" />
+                  <Image src={smallLogo} alt="logo" objectFit="cover" width={50} height={50} className="ml-1 rounded-full" />
                 </div>
-                <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-semibold">HRMS</span>
-                  <span className="truncate text-xs">App</span>
+                <div className="grid text-left flex-1 text-lg font-sans">
+                  <span className="truncate text-slate-800 font-bold">SQUAD HR</span>
                 </div>
-              </a>
-            </SidebarMenuButton>
+              </div>
+            </div>
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={data.navMain} />
-        <NavProjects projects={data.projects} />
-        <NavSecondary items={data.navSecondary} className="mt-auto" />
+        <NavProjects projects={data.projects} isActive={isActive} handleClick={handleClick}/>
       </SidebarContent>
       <SidebarFooter>
         <NavUser user={data.user} />

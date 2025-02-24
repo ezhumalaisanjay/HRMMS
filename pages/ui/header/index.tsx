@@ -1,13 +1,11 @@
 "use client"
 
-import { Moon, PaintbrushVertical, Palette, SidebarIcon, Sun } from "lucide-react"
+import { Moon, Palette, SidebarIcon, Sun } from "lucide-react"
 import SearchForm from "./search-form"
 import {
   Breadcrumb,
   BreadcrumbItem,
-  BreadcrumbLink,
   BreadcrumbList,
-  BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
 import { Button } from "@/components/ui/button"
@@ -17,8 +15,21 @@ import { useState } from "react"
 import { useTheme } from "@/components/ui/theme-provider"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import ThemeCustomizer from "@/components/ui/theme-customizer"
+import Link from "next/link"
 
-export default function SiteHeader() {
+interface List {
+  index: number,
+  name: string,
+  url: string,
+}
+
+interface AppSidebarProps {
+  breadCrumbs: List[]; // The type of data prop
+  isActive: number;
+  handleClick: (id: number) => void;
+}
+
+export default function SiteHeader({breadCrumbs = [], isActive, handleClick} : AppSidebarProps) {
   const [isLightMode, setIsLightMode] = useState(false);
   const { toggleSidebar } = useSidebar();
   const { theme, setTheme } = useTheme();
@@ -37,15 +48,21 @@ export default function SiteHeader() {
         <Separator orientation="vertical" className="mr-2 h-4" />
         <Breadcrumb className="hidden sm:block">
           <BreadcrumbList>
-            <BreadcrumbItem>
-              <BreadcrumbLink href="#">
-                Home
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator />
-            <BreadcrumbItem>
-              <BreadcrumbPage>Users & Roles</BreadcrumbPage>
-            </BreadcrumbItem>
+          {breadCrumbs && breadCrumbs.length > 0 ? (
+              breadCrumbs.map((item, i) => (
+                <>
+                  <BreadcrumbItem
+                    className={isActive === i ? "font-bold" : ""}
+                    onClick={() => handleClick(i)}
+                  >
+                    <Link href={item.url}>{item.name}</Link>
+                  </BreadcrumbItem>
+                  <BreadcrumbSeparator />
+                </>
+              ))
+            ) : (
+              <div>No breadcrumbs available</div> // You can show a fallback message or leave it empty
+            )}
           </BreadcrumbList>
         </Breadcrumb>
         <SearchForm className="w-full sm:ml-auto sm:w-auto" />

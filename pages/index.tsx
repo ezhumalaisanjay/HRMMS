@@ -16,15 +16,13 @@ function App() {
 
   return (
     <>
-      <ThemeProvider>
-        <div className="flex w-full justify-center">
-          {isLogin ? 
-          <LoginForm handleLogin={isLoginFalse}/>
-          :
-          <Signup handleLogin={isLoginTrue}/>
-          }
-        </div>
-      </ThemeProvider>
+      <div className="flex w-full justify-center">
+        {isLogin ? 
+        <LoginForm handleLogin={isLoginFalse}/>
+        :
+        <Signup handleLogin={isLoginTrue}/>
+        }
+      </div>
     </>
   );
 }

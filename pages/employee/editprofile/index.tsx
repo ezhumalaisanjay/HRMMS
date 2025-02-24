@@ -1,13 +1,28 @@
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
 import { ThemeProvider } from "@/components/ui/theme-provider"
-import SiteHeader from "@/pages/ui/header/index"
-import HRDashboard from "@/pages/ui/hr-dashboard/index"
-import AppSidebar from "@/pages/ui/sidebar/index"
+import SiteHeader from "@/pages/ui/header"
+import ProfileSettingsStepForm from "@/pages/ui/profile/stepform"
+import AppSidebar from "@/pages/ui/sidebar"
 import { Frame, PieChart } from "lucide-react"
 import { useState } from "react"
 
-export default function Dashboard() {
-  const [ isActive, setIsActive ] = useState<number>(0);
+function EditProfilePage() {
+  const [ isActive, setIsActive ] = useState<number>(1);
+  const breadCrumbs = [
+    {
+      index: 0,
+      name: "Dashboard",
+      url: "/employee/dashboard",
+    }, {
+      index: 1,
+      name: "Profile",
+      url: "/employee/profile",
+    }, {
+      index: 2,
+      name: "Edit Profile",
+      url: "/employee/editprofile",
+    },
+  ]
   const [userDetails, setUserDetails] = useState(
     [
       {
@@ -44,18 +59,6 @@ export default function Dashboard() {
     ]
   );
 
-  const handleClick = (id: number) => {
-    setIsActive(id);
-  }
-
-  const breadCrumbs = [
-    {
-      index: 0,
-      name: "Dashboard",
-      url: "/hr/dashboard",
-    }, 
-  ]
-
   const data = {
     user: {
       name: "shadcn",
@@ -65,32 +68,45 @@ export default function Dashboard() {
     projects: [
       {
         name: "Dashboard",
-        url: "/hr/dashboard",
+        url: "/employee/dashboard",
         icon: Frame,
       },
       {
-        name: "Other",
-        url: "/hr/other",
+        name: "Profile",
+        url: "/employee/profile",
+        icon: PieChart,
+      },
+      {
+        name: "Leave Tracker",
+        url: "/employee/leavetracker",
         icon: PieChart,
       },
     ],
   }
-  
-  return (
-    <ThemeProvider>
-      <div className="[--header-height:calc(theme(spacing.14))] flex w-full">
-        <SidebarProvider>
-          <SiteHeader isActive={isActive} handleClick={handleClick} breadCrumbs={breadCrumbs}/>
-          <div className="flex flex-1">
-            <AppSidebar data={data} isActive={isActive} handleClick={handleClick}/>
-            <SidebarInset>
-              <div className="flex flex-1 flex-col gap-4 mt-10 p-4">
-                <HRDashboard />
-              </div>
-            </SidebarInset>
-          </div>
-        </SidebarProvider>
-      </div>
-    </ThemeProvider>
+
+  const handleClick = (id: number) => {
+    setIsActive(id);
+  }
+
+  return(
+    <>  
+      <ThemeProvider>
+        <div className="[--header-height:calc(theme(spacing.14))] flex w-full">
+          <SidebarProvider>
+            <SiteHeader isActive={isActive} handleClick={handleClick} breadCrumbs={breadCrumbs} />
+            <div className="flex flex-1">
+              <AppSidebar data={data} isActive={isActive} handleClick={handleClick}/>
+              <SidebarInset>
+                <div className="flex flex-1 flex-col gap-4 mt-10 p-4">
+                  <ProfileSettingsStepForm userDetails={userDetails}/>
+                </div>
+              </SidebarInset>
+            </div>
+          </SidebarProvider>
+        </div>
+      </ThemeProvider>
+    </>
   )
 }
+
+export default EditProfilePage
