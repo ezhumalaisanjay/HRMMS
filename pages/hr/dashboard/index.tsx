@@ -44,7 +44,7 @@ export default function Dashboard() {
 
   return (
     <ThemeProvider>
-      <div className="[--header-height:calc(theme(spacing.14))]">
+      <div className="[--header-height:calc(theme(spacing.14))] flex w-full">
         <SidebarProvider>
           <SiteHeader />
           <div className="flex flex-1">

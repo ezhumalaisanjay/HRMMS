@@ -17,7 +17,7 @@ function App() {
   return (
     <>
       <ThemeProvider>
-        <div>
+        <div className="flex w-full justify-center">
           {isLogin ? 
           <LoginForm handleLogin={isLoginFalse}/>
           :
