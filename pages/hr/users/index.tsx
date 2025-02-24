@@ -2,10 +2,11 @@ import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
 import { ThemeProvider } from "@/components/ui/theme-provider"
 import SiteHeader from "@/pages/ui/header"
 import AppSidebar from "@/pages/ui/sidebar"
+import UserManagement from "@/pages/ui/users-list"
 import { Frame, PieChart } from "lucide-react"
 import { useState } from "react"
 
-function Other() {
+function Users() {
   const [ isActive, setIsActive ] = useState<number>(1);
   const breadCrumbs = [
     {
@@ -14,8 +15,8 @@ function Other() {
       url: "/hr/dashboard",
     }, {
       index: 1,
-      name: "Other",
-      url: "/hr/other",
+      name: "Users",
+      url: "/hr/user",
     },
   ]
 
@@ -32,8 +33,8 @@ function Other() {
         icon: Frame,
       },
       {
-        name: "Other",
-        url: "/hr/other",
+        name: "Users",
+        url: "/hr/users",
         icon: PieChart,
       },
     ],
@@ -53,7 +54,7 @@ function Other() {
               <AppSidebar data={data} isActive={isActive} handleClick={handleClick}/>
               <SidebarInset>
                 <div className="flex flex-1 flex-col gap-4 mt-10 p-4">
-                  Under Contruction...
+                  <UserManagement />
                 </div>
               </SidebarInset>
             </div>
@@ -64,4 +65,4 @@ function Other() {
   )
 }
 
-export default Other
+export default Users

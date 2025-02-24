@@ -22,19 +22,19 @@ export default function TenetDashboard() {
     {
       name: "Total Organizations",
       count: "50",
-      icon: <Globe className="size-4" />,
+      icon: <Globe className="size-4 text-green-500" />,
     }, {
       name: "Total Groups",
       count: "152",
-      icon: <Boxes className="size-4" />,
+      icon: <Boxes className="size-4 text-blue-500" />,
     }, {
       name: "Total Users",
       count: "25,001",
-      icon: <Users className="size-4" />,
+      icon: <Users className="size-4 text-violet-500" />,
     }, {
       name: "New Users",
       count: "1001",
-      icon: <TicketsPlane className="size-4" />,
+      icon: <TicketsPlane className="size-4 text-amber-500" />,
     },
   ]);
 

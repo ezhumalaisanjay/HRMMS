@@ -8,41 +8,6 @@ import { useState } from "react"
 
 export default function Dashboard() {
   const [ isActive, setIsActive ] = useState<number>(0);
-  const [userDetails, setUserDetails] = useState(
-    [
-      {
-        name: "Jesse Pinkman",
-        profile: "https://avatars.dicebear.com/api/adventurer-neutral/mail%40ashallendesign.co.uk.svg",
-        role: "Developer",
-        location: "Chennai, India",
-        department: "DevOps",
-        shift: "General",
-        TimeZone: "(GMT+05:30)",
-        seatingLocation: "Anna Nagar",
-        email: "jessepinkman@example.com",
-        mobileNo: "9876543210",
-        workNo: "9876543210",
-        about: "New Joining",
-        employeeID: "Example-1234",
-        nickName: "-",
-        firstName: "Jesse",
-        lastName: "Pinkman",
-        division: "-",
-        designation: "Developer",
-        employmentType: "Permanent",
-        employeeStatus: "Active",
-        source: "Linkedin",
-        doj: "11-12-2023",
-        experience: "1 month(s)",
-        dob: "11-12-2002",
-        maritalStatus: "Single",
-        gender: "Male",
-        expertise: "-",
-        tags: "-",
-        address: "XYZ Street, MM Nagar, YYY - 101",
-      }
-    ]
-  );
 
   const handleClick = (id: number) => {
     setIsActive(id);
@@ -69,8 +34,8 @@ export default function Dashboard() {
         icon: Frame,
       },
       {
-        name: "Other",
-        url: "/hr/other",
+        name: "Users",
+        url: "/hr/users",
         icon: PieChart,
       },
     ],

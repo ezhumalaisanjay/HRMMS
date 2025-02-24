@@ -22,22 +22,22 @@ export default function HRDashboard() {
     {
       name: "Employee Count",
       count: "25,111",
-      icon: <Users className="size-4" />,
+      icon: <Users className="size-4 text-fuchsia-500" />,
       organization : "SOS",
     }, {
       name: "Active Employees",
       count: "15,000",
-      icon: <UserRoundCheck className="size-4" />,
+      icon: <UserRoundCheck className="size-4 text-red-500" />,
       organization : "SOS"
     }, {
       name: "New Hires",
       count: "1,501",
-      icon: <UserRoundPlus className="size-4" />,
+      icon: <UserRoundPlus className="size-4 text-blue-500" />,
       organization : "SOS"
     }, {
       name: "Employee Turnover Rate",
       count: "25,111",
-      icon: <SignalHigh className="size-4" />,
+      icon: <SignalHigh className="size-4 text-emerald-500" />,
       organization : "SOS"
     },
   ]);

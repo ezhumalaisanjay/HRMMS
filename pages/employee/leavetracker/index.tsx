@@ -4,6 +4,9 @@ import SiteHeader from "@/pages/ui/header/index"
 import AppSidebar from "@/pages/ui/sidebar/index"
 import { Frame, PieChart } from "lucide-react"
 import { useState } from "react"
+import UnderConstruction from "../../images/underconstruction.webp"
+import Image from "next/image"
+
 
 export default function LeaveTrackerPage() {
   const [isActive, setIsActive] = useState<number>(2);
@@ -59,8 +62,8 @@ export default function LeaveTrackerPage() {
           <div className="flex flex-1">
             <AppSidebar data={data} isActive={isActive} handleClick={handleClick}/>
             <SidebarInset>
-              <div className="flex flex-1 flex-col gap-4 mt-10 p-4">
-                UnderContruction..
+              <div className="flex flex-1 flex-col gap-4 mt-10 p-4 justify-center items-center">
+                <Image src={UnderConstruction} alt="Working in Progress.." width={400} height={400} />
               </div>
             </SidebarInset>
           </div>
