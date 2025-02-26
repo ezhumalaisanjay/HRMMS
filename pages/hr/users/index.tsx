@@ -1,13 +1,16 @@
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { ThemeProvider } from "@/components/ui/theme-provider"
+import EmployeeListTable from "@/pages/ui/employee-list"
 import SiteHeader from "@/pages/ui/header"
 import AppSidebar from "@/pages/ui/sidebar"
-import UserManagement from "@/pages/ui/users-list"
-import { Frame, PieChart } from "lucide-react"
-import { useState } from "react"
+import UsersListTable from "@/pages/ui/users-list/page"
+import { CalendarDays, CalendarX, Frame, PackagePlus, PersonStanding } from "lucide-react"
+import { useEffect, useState } from "react"
 
 function Users() {
-  const [ isActive, setIsActive ] = useState<number>(1);
+  const [ isActive, setIsActive ] = useState<number>(2);
+
   const breadCrumbs = [
     {
       index: 0,
@@ -15,8 +18,8 @@ function Users() {
       url: "/hr/dashboard",
     }, {
       index: 1,
-      name: "Users",
-      url: "/hr/user",
+      name: "Onboarding",
+      url: "/hr/onboarding",
     },
   ]
 
@@ -33,12 +36,33 @@ function Users() {
         icon: Frame,
       },
       {
+        name: "Onboarding",
+        url: "/hr/onboarding",
+        icon: PackagePlus,
+      },
+      {
         name: "Users",
         url: "/hr/users",
-        icon: PieChart,
+        icon: PersonStanding,
+      },
+      {
+        name: "Leave Tracker",
+        url: "/hr/leavetracker",
+        icon: CalendarX,
+      },
+      {
+        name: "Attendance",
+        url: "/hr/attendance",
+        icon: CalendarDays,
       },
     ],
   }
+
+  useEffect(() => {
+    // Example of setting searchParams from an async fetch if needed.
+    // Make sure you handle async data properly.
+    // setSearchParams({ search: 'newSearch', tenant: 'tenant-b', group: 'group-2', page: '1' });
+  }, []);
 
   const handleClick = (id: number) => {
     setIsActive(id);
@@ -54,7 +78,20 @@ function Users() {
               <AppSidebar data={data} isActive={isActive} handleClick={handleClick}/>
               <SidebarInset>
                 <div className="flex flex-1 flex-col gap-4 mt-10 p-4">
-                  <UserManagement />
+                  <div className="m-3">
+                    <Tabs defaultValue="0">
+                      <TabsList>
+                        <TabsTrigger value="0">Users</TabsTrigger>
+                        <TabsTrigger value="1">Employees</TabsTrigger>
+                      </TabsList>
+                      <TabsContent value="0">
+                        <UsersListTable />
+                      </TabsContent>
+                      <TabsContent value="1">
+                        <EmployeeListTable />
+                      </TabsContent>
+                    </Tabs>
+                  </div>
                 </div>
               </SidebarInset>
             </div>
@@ -62,6 +99,7 @@ function Users() {
         </div>
       </ThemeProvider>
     </>
+    
   )
 }
 

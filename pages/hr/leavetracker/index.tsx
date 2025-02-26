@@ -1,13 +1,18 @@
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
 import { ThemeProvider } from "@/components/ui/theme-provider"
 import SiteHeader from "@/pages/ui/header/index"
-import HRDashboard from "@/pages/ui/hr-dashboard/index"
 import AppSidebar from "@/pages/ui/sidebar/index"
-import { CalendarDays, CalendarX, Frame, PackagePlus, PersonStanding, PieChart } from "lucide-react"
+import { CalendarDays, CalendarX, Frame, PackagePlus, PersonStanding } from "lucide-react"
 import { useState } from "react"
+import EmployeeLeaveBalanceAndHistoryPage from "@/pages/ui/leavetracker/employee-leave-balance"
+import LeaveManagementPage from "@/pages/ui/leavetracker/leave-management"
+import LeavePolicyPage from "@/pages/ui/leavetracker/leave-policy/page"
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { TabsContent } from "@radix-ui/react-tabs"
 
-export default function Dashboard() {
-  const [ isActive, setIsActive ] = useState<number>(0);
+
+export default function LeaveTracker() {
+  const [ isActive, setIsActive ] = useState<number>(3);
 
   const handleClick = (id: number) => {
     setIsActive(id);
@@ -18,6 +23,18 @@ export default function Dashboard() {
       index: 0,
       name: "Dashboard",
       url: "/hr/dashboard",
+    }, {
+      index: 1,
+      name: "Onboarding",
+      url: "/hr/onboarding",
+    }, {
+      index: 2,
+      name: "Users",
+      url: "/hr/users",
+    }, {
+      index: 3,
+      name: "Leave Tracker",
+      url: "/hr/leavetracker",
     }, 
   ]
 
@@ -65,7 +82,24 @@ export default function Dashboard() {
             <AppSidebar data={data} isActive={isActive} handleClick={handleClick}/>
             <SidebarInset>
               <div className="flex flex-1 flex-col gap-4 mt-10 p-4">
-                <HRDashboard />
+                <div className="m-3">
+                  <Tabs defaultValue="leaverequest">
+                    <TabsList>
+                      <TabsTrigger value="leaverequest">Leave request</TabsTrigger>
+                      <TabsTrigger value="leavemanagement">Leave Management</TabsTrigger>
+                      <TabsTrigger value="leavepolicy">Leave Policy</TabsTrigger>
+                    </TabsList>
+                    <TabsContent value="leaverequest">
+                      <EmployeeLeaveBalanceAndHistoryPage />
+                    </TabsContent>
+                    <TabsContent value="leavemanagement">
+                      <LeaveManagementPage />
+                    </TabsContent>
+                    <TabsContent value="leavepolicy">
+                      <LeavePolicyPage />
+                    </TabsContent>
+                  </Tabs>
+                </div>
               </div>
             </SidebarInset>
           </div>

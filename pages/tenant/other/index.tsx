@@ -13,11 +13,11 @@ function Other() {
     {
       index: 0,
       name: "Dashboard",
-      url: "/tenet/dashboard",
+      url: "/tenant/dashboard",
     }, {
       index: 1,
       name: "Other",
-      url: "/tenet/other",
+      url: "/tenant/other",
     },
   ]
 
@@ -30,12 +30,12 @@ function Other() {
     projects: [
       {
         name: "Dashboard",
-        url: "/tenet/dashboard",
+        url: "/tenant/dashboard",
         icon: Frame,
       },
       {
         name: "Other",
-        url: "/tenet/other",
+        url: "/tenant/other",
         icon: PieChart,
       },
     ],

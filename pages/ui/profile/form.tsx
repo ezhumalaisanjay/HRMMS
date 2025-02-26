@@ -262,7 +262,6 @@ export default function ProfileSettings({userDetails} : {userDetails: UserDetail
                     control={form.control}
                     name="division"
                     render={({ field }) => {
-                      console.log("Division is", field.value);
                       return (
                       <FormItem className="flex flex-col">
                         <FormLabel className="sm:basis-1/3">Division</FormLabel>

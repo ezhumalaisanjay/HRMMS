@@ -3,7 +3,7 @@ import { ThemeProvider } from "@/components/ui/theme-provider"
 import SiteHeader from "@/pages/ui/header"
 import ProfileSettingsStepForm from "@/pages/ui/profile/stepform"
 import AppSidebar from "@/pages/ui/sidebar"
-import { Frame, PieChart } from "lucide-react"
+import { CalendarDays, Frame, PieChart } from "lucide-react"
 import { useState } from "react"
 
 function EditProfilePage() {
@@ -15,10 +15,6 @@ function EditProfilePage() {
       url: "/employee/dashboard",
     }, {
       index: 1,
-      name: "Profile",
-      url: "/employee/profile",
-    }, {
-      index: 2,
       name: "Edit Profile",
       url: "/employee/editprofile",
     },
@@ -72,14 +68,14 @@ function EditProfilePage() {
         icon: Frame,
       },
       {
-        name: "Profile",
-        url: "/employee/profile",
-        icon: PieChart,
-      },
-      {
         name: "Leave Tracker",
         url: "/employee/leavetracker",
         icon: PieChart,
+      },
+      {
+        name: "Attendance",
+        url: "/employee/attendance",
+        icon: CalendarDays,
       },
     ],
   }

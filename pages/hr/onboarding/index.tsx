@@ -1,16 +1,30 @@
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
 import { ThemeProvider } from "@/components/ui/theme-provider"
 import SiteHeader from "@/pages/ui/header/index"
-import EmployeeLeaveBalanceAndHistoryPage from "@/pages/ui/leavetracker/employee-leave-balance"
-import LeaveManagementPage from "@/pages/ui/leavetracker/leave-management"
-import LeavePolicyPage from "@/pages/ui/leavetracker/leave-policy/page"
-import LeaveRequestPage from "@/pages/ui/leavetracker/leave-request"
 import AppSidebar from "@/pages/ui/sidebar/index"
-import { CalendarDays, CalendarX, Frame } from "lucide-react"
+import { CalendarDays, CalendarX, Frame, PackagePlus, PersonStanding } from "lucide-react"
 import { useState } from "react"
+import OnboardingPage from "../../ui/onboarding/index"
 
-export default function LeaveTrackerPage() {
-  const [isActive, setIsActive] = useState<number>(1);
+export default function Onboarding() {
+  const [ isActive, setIsActive ] = useState<number>(1);
+
+  const handleClick = (id: number) => {
+    setIsActive(id);
+  }
+
+  const breadCrumbs = [
+    {
+      index: 0,
+      name: "Dashboard",
+      url: "/hr/dashboard",
+    }, {
+      index: 2,
+      name: "Onboarding",
+      url: "/hr/onboarding",
+    }, 
+  ]
+
   const data = {
     user: {
       name: "shadcn",
@@ -20,47 +34,42 @@ export default function LeaveTrackerPage() {
     projects: [
       {
         name: "Dashboard",
-        url: "/employee/dashboard",
+        url: "/hr/dashboard",
         icon: Frame,
       },
       {
+        name: "Onboarding",
+        url: "/hr/onboarding",
+        icon: PackagePlus,
+      },
+      {
+        name: "Users",
+        url: "/hr/users",
+        icon: PersonStanding,
+      },
+      {
         name: "Leave Tracker",
-        url: "/employee/leavetracker",
+        url: "/hr/leavetracker",
         icon: CalendarX,
       },
       {
         name: "Attendance",
-        url: "/employee/attendance",
+        url: "/hr/attendance",
         icon: CalendarDays,
       },
     ],
-  }
-  const breadCrumbs = [
-    {
-      index: 0,
-      name: "Dashboard",
-      url: "/employee/dashboard",
-    }, {
-      index: 1,
-      name: "Leave Tracker",
-      url: "/employee/leavetracker",
-    }, 
-  ]
-
-  const handleClick = (id: number) => {
-    setIsActive(id)
   }
   
   return (
     <ThemeProvider>
       <div className="[--header-height:calc(theme(spacing.14))] flex w-full">
         <SidebarProvider>
-          <SiteHeader isActive={isActive} handleClick={handleClick} breadCrumbs={breadCrumbs} />
+          <SiteHeader isActive={isActive} handleClick={handleClick} breadCrumbs={breadCrumbs}/>
           <div className="flex flex-1">
             <AppSidebar data={data} isActive={isActive} handleClick={handleClick}/>
             <SidebarInset>
               <div className="flex flex-1 flex-col gap-4 mt-10 p-4">
-                <EmployeeLeaveBalanceAndHistoryPage />
+                <OnboardingPage />
               </div>
             </SidebarInset>
           </div>

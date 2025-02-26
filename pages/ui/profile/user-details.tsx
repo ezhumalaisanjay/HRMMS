@@ -82,7 +82,7 @@ function UserDetails({ userDetails }: { userDetails?: UserDetails[] }) {
               <div className="flex justify-between items-center">
                 <CardTitle>Profile</CardTitle>
                 <CardDescription className="hover:cursor-pointer">
-                  <Link href="/employee/editprofile">
+                  <Link href="/profile/editprofile">
                     <Pencil className="size-6 hover:bg-slate-100 rounded-lg p-1" />
                   </Link>
                 </CardDescription>

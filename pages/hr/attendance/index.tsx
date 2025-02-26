@@ -5,9 +5,16 @@ import HRDashboard from "@/pages/ui/hr-dashboard/index"
 import AppSidebar from "@/pages/ui/sidebar/index"
 import { CalendarDays, CalendarX, Frame, PackagePlus, PersonStanding, PieChart } from "lucide-react"
 import { useState } from "react"
+import UnderConstruction from "../../images/underconstruction.webp"
+import Image from "next/image"
+import MyShiftsPage from "@/pages/ui/attendance/my-shifts/page"
+import ShiftSchedulingPage from "@/pages/ui/attendance/shift-scheduling/page"
+import ShiftsAssigningPage from "@/pages/ui/attendance/hr-shifts-assign/page"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
-export default function Dashboard() {
-  const [ isActive, setIsActive ] = useState<number>(0);
+
+export default function Onboarding() {
+  const [ isActive, setIsActive ] = useState<number>(4);
 
   const handleClick = (id: number) => {
     setIsActive(id);
@@ -18,6 +25,22 @@ export default function Dashboard() {
       index: 0,
       name: "Dashboard",
       url: "/hr/dashboard",
+    }, {
+      index: 1,
+      name: "Onboarding",
+      url: "/hr/onboarding",
+    }, {
+      index: 2,
+      name: "Users",
+      url: "/hr/users",
+    }, {
+      index: 3,
+      name: "Leave Tracker",
+      url: "/hr/leavetracker",
+    }, {
+      index: 4,
+      name: "Attendance",
+      url: "/hr/attendance",
     }, 
   ]
 
@@ -65,7 +88,24 @@ export default function Dashboard() {
             <AppSidebar data={data} isActive={isActive} handleClick={handleClick}/>
             <SidebarInset>
               <div className="flex flex-1 flex-col gap-4 mt-10 p-4">
-                <HRDashboard />
+                <div className="m-3">
+                  <Tabs defaultValue="0">
+                    <TabsList>
+                      <TabsTrigger value="0">My Shift</TabsTrigger>
+                      <TabsTrigger value="1">Shift Assign</TabsTrigger>
+                      <TabsTrigger value="2">Shift Schedule</TabsTrigger>
+                    </TabsList>
+                    <TabsContent value="0">
+                      <MyShiftsPage />
+                    </TabsContent>
+                    <TabsContent value="1">
+                      <ShiftsAssigningPage />
+                    </TabsContent>
+                    <TabsContent value="2">
+                      <ShiftSchedulingPage />
+                    </TabsContent>
+                  </Tabs>
+                </div>
               </div>
             </SidebarInset>
           </div>

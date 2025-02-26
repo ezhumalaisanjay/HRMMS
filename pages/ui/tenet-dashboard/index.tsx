@@ -184,9 +184,6 @@ export default function TenetDashboard() {
               </div>
               <div className="flex flex-wrap md:grid gap-4 md:grid-cols-2 lg:grid-cols-7">
                 <Card className="col-span-4 w-full">
-                  <CardHeader>
-                    <CardTitle>High-level usage metrics</CardTitle>
-                  </CardHeader>
                   <CardContent>
                     <UsageChart />
                   </CardContent>

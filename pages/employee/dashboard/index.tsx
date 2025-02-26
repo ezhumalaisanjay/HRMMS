@@ -2,10 +2,10 @@ import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
 import { ThemeProvider } from "@/components/ui/theme-provider"
 import SiteHeader from "@/pages/ui/header/index"
 import AppSidebar from "@/pages/ui/sidebar/index"
-import { Frame, PieChart } from "lucide-react"
+import { CalendarDays, CalendarX, Frame, } from "lucide-react"
 import { useState } from "react"
-import UnderConstruction from "../../images/underconstruction.webp"
-import Image from "next/image"
+import EmployeeProfileDashboard from "@/pages/ui/employee-dashboard"
+
 
 export default function Dashboard() {
   const [isActive, setIsActive] = useState<number>(0);
@@ -22,14 +22,14 @@ export default function Dashboard() {
         icon: Frame,
       },
       {
-        name: "Profile",
-        url: "/employee/profile",
-        icon: PieChart,
-      },
-      {
         name: "Leave Tracker",
         url: "/employee/leavetracker",
-        icon: PieChart,
+        icon: CalendarX,
+      },
+      {
+        name: "Attendance",
+        url: "/employee/attendance",
+        icon: CalendarDays,
       },
     ],
   }
@@ -53,8 +53,8 @@ export default function Dashboard() {
           <div className="flex flex-1">
             <AppSidebar data={data} isActive={isActive} handleClick={handleClick}/>
             <SidebarInset>
-              <div className="flex flex-1 flex-col gap-4 mt-10 p-4 justify-center items-center">
-                <Image src={UnderConstruction} alt="Working in Progress.." width={400} height={400} />
+              <div className="flex flex-1 flex-col gap-4 mt-10 p-4">
+                <EmployeeProfileDashboard />
               </div>
             </SidebarInset>
           </div>

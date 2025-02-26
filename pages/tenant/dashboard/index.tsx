@@ -1,16 +1,13 @@
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
 import { ThemeProvider } from "@/components/ui/theme-provider"
 import SiteHeader from "@/pages/ui/header/index"
-import EmployeeLeaveBalanceAndHistoryPage from "@/pages/ui/leavetracker/employee-leave-balance"
-import LeaveManagementPage from "@/pages/ui/leavetracker/leave-management"
-import LeavePolicyPage from "@/pages/ui/leavetracker/leave-policy/page"
-import LeaveRequestPage from "@/pages/ui/leavetracker/leave-request"
 import AppSidebar from "@/pages/ui/sidebar/index"
-import { CalendarDays, CalendarX, Frame } from "lucide-react"
+import TenetDashboard from "@/pages/ui/tenet-dashboard"
+import { Frame, PieChart } from "lucide-react"
 import { useState } from "react"
 
-export default function LeaveTrackerPage() {
-  const [isActive, setIsActive] = useState<number>(1);
+export default function Dashboard() {
+  const [isActive, setIsActive] = useState<number>(0);
   const data = {
     user: {
       name: "shadcn",
@@ -20,18 +17,13 @@ export default function LeaveTrackerPage() {
     projects: [
       {
         name: "Dashboard",
-        url: "/employee/dashboard",
+        url: "/tenant/dashboard",
         icon: Frame,
       },
       {
-        name: "Leave Tracker",
-        url: "/employee/leavetracker",
-        icon: CalendarX,
-      },
-      {
-        name: "Attendance",
-        url: "/employee/attendance",
-        icon: CalendarDays,
+        name: "Other",
+        url: "/tenant/other",
+        icon: PieChart,
       },
     ],
   }
@@ -39,11 +31,7 @@ export default function LeaveTrackerPage() {
     {
       index: 0,
       name: "Dashboard",
-      url: "/employee/dashboard",
-    }, {
-      index: 1,
-      name: "Leave Tracker",
-      url: "/employee/leavetracker",
+      url: "/tenant/dashboard",
     }, 
   ]
 
@@ -60,7 +48,7 @@ export default function LeaveTrackerPage() {
             <AppSidebar data={data} isActive={isActive} handleClick={handleClick}/>
             <SidebarInset>
               <div className="flex flex-1 flex-col gap-4 mt-10 p-4">
-                <EmployeeLeaveBalanceAndHistoryPage />
+                <TenetDashboard />
               </div>
             </SidebarInset>
           </div>

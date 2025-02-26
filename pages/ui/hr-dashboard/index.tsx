@@ -188,9 +188,6 @@ export default function HRDashboard() {
               </div>
               <div className="flex flex-wrap md:grid gap-4 md:grid-cols-2 lg:grid-cols-7">
                 <Card className="col-span-4 w-full">
-                  <CardHeader>
-                    <CardTitle>Department Headcount Summary</CardTitle>
-                  </CardHeader>
                   <CardContent className="pl-2">
                     <HeadCount />
                   </CardContent>

@@ -2,12 +2,34 @@ import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
 import { ThemeProvider } from "@/components/ui/theme-provider"
 import SiteHeader from "@/pages/ui/header/index"
 import AppSidebar from "@/pages/ui/sidebar/index"
-import TenetDashboard from "@/pages/ui/tenet-dashboard"
-import { Frame, PieChart } from "lucide-react"
+import { CalendarDays, CalendarX, Frame } from "lucide-react"
 import { useState } from "react"
+import MyShiftsPage from "@/pages/ui/attendance/my-shifts/page"
 
-export default function Dashboard() {
-  const [isActive, setIsActive] = useState<number>(0);
+
+export default function Attendance() {
+  const [ isActive, setIsActive ] = useState<number>(2);
+
+  const handleClick = (id: number) => {
+    setIsActive(id);
+  }
+
+  const breadCrumbs = [
+    {
+      index: 0,
+      name: "Dashboard",
+      url: "/employee/dashboard",
+    },{
+      index: 1,
+      name: "Leave Tracker",
+      url: "/employee/leavetracker",
+    },  {
+      index: 2,
+      name: "Attendance",
+      url: "/employee/attendance",
+    },
+  ]
+
   const data = {
     user: {
       name: "shadcn",
@@ -17,38 +39,32 @@ export default function Dashboard() {
     projects: [
       {
         name: "Dashboard",
-        url: "/tenet/dashboard",
+        url: "/employee/dashboard",
         icon: Frame,
       },
       {
-        name: "Other",
-        url: "/tenet/other",
-        icon: PieChart,
+        name: "Leave Tracker",
+        url: "/employee/leavetracker",
+        icon: CalendarX,
+      },
+      {
+        name: "Attendance",
+        url: "/employee/attendance",
+        icon: CalendarDays,
       },
     ],
-  }
-  const breadCrumbs = [
-    {
-      index: 0,
-      name: "Dashboard",
-      url: "/tenet/dashboard",
-    }, 
-  ]
-
-  const handleClick = (id: number) => {
-    setIsActive(id)
   }
   
   return (
     <ThemeProvider>
       <div className="[--header-height:calc(theme(spacing.14))] flex w-full">
         <SidebarProvider>
-          <SiteHeader isActive={isActive} handleClick={handleClick} breadCrumbs={breadCrumbs} />
+          <SiteHeader isActive={isActive} handleClick={handleClick} breadCrumbs={breadCrumbs}/>
           <div className="flex flex-1">
             <AppSidebar data={data} isActive={isActive} handleClick={handleClick}/>
             <SidebarInset>
               <div className="flex flex-1 flex-col gap-4 mt-10 p-4">
-                <TenetDashboard />
+                <MyShiftsPage />
               </div>
             </SidebarInset>
           </div>

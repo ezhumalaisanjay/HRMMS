@@ -16,6 +16,7 @@ import { useTheme } from "@/components/ui/theme-provider"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import ThemeCustomizer from "@/components/ui/theme-customizer"
 import Link from "next/link"
+import { NotificationCenter } from "@/components/ui/notification-center"
 
 interface List {
   index: number,
@@ -66,6 +67,7 @@ export default function SiteHeader({breadCrumbs = [], isActive, handleClick} : A
           </BreadcrumbList>
         </Breadcrumb>
         <SearchForm className="w-full sm:ml-auto sm:w-auto" />
+        <NotificationCenter />
           {isLightMode ? 
           <Button 
           variant={"ghost"}

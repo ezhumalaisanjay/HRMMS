@@ -3,7 +3,7 @@ import { ThemeProvider } from "@/components/ui/theme-provider"
 import SiteHeader from "@/pages/ui/header"
 import Profile from "@/pages/ui/profile"
 import AppSidebar from "@/pages/ui/sidebar"
-import { Frame, PieChart } from "lucide-react"
+import { CalendarDays, Frame, PieChart } from "lucide-react"
 import { useState } from "react"
 
 function ProfilePage() {
@@ -33,14 +33,14 @@ function ProfilePage() {
         icon: Frame,
       },
       {
-        name: "Profile",
-        url: "/employee/profile",
-        icon: PieChart,
-      },
-      {
         name: "Leave Tracker",
         url: "/employee/leavetracker",
         icon: PieChart,
+      },
+      {
+        name: "Attendance",
+        url: "/employee/attendance",
+        icon: CalendarDays,
       },
     ],
   }
