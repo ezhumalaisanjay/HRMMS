@@ -92,7 +92,11 @@ export default function LeaveRequestPage() {
   async function onSubmit(data: FormValues) {
     try {
       setIsSubmitting(true);
-      await client.models.LeaveRequest.create(data);
+      await client.models.LeaveRequest.create({
+        ...data,
+        startDate: data.startDate.toISOString(),
+        endDate: data.endDate.toISOString(),
+      });
       const today = new Date();
       const daysInAdvance = differenceInDays(data.startDate, today);
       let points =
@@ -148,64 +152,6 @@ export default function LeaveRequestPage() {
                       ))}
                     </SelectContent>
                   </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <div className="grid gap-6 md:grid-cols-2">
-              <FormField
-                control={form.control}
-                name="startDate"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Start Date</FormLabel>
-                    <Popover>
-                      <PopoverTrigger asChild>
-                        <FormControl>
-                          <Button
-                            variant="outline"
-                            className={cn(
-                              "w-full pl-3 text-left font-normal",
-                              !field.value && "text-muted-foreground"
-                            )}
-                          >
-                            {field.value ? (
-                              format(field.value, "PPP")
-                            ) : (
-                              <span>Pick a date</span>
-                            )}
-                            <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                          </Button>
-                        </FormControl>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-auto p-0" align="start">
-                        <Calendar
-                          mode="single"
-                          selected={field.value}
-                          onSelect={field.onChange}
-                          disabled={(date) => date < new Date()}
-                          initialFocus
-                        />
-                      </PopoverContent>
-                    </Popover>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-            <FormField
-              control={form.control}
-              name="reason"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Reason</FormLabel>
-                  <FormControl>
-                    <Textarea
-                      placeholder="Please provide a detailed reason for your leave request"
-                      className="min-h-[100px]"
-                      {...field}
-                    />
-                  </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
