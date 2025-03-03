@@ -1,7 +1,6 @@
 "use client"
 
 import { Badge } from "@/components/ui/badge"
-
 import * as React from "react"
 import {
   type ColumnDef,
@@ -15,7 +14,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table"
-import { ArrowUpDown, ChevronDown, MoreHorizontal, Filter } from "lucide-react"
+import { ArrowUpDown, MoreHorizontal, Copy, Eye, Pencil, ListCollapseIcon } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
 import {
@@ -24,17 +23,14 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Input } from "@/components/ui/input"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Calendar } from "@/components/ui/calendar"
-import { CalendarIcon } from "lucide-react"
-import { format } from "date-fns"
 import Link from "next/link"
+import ViewEmployeeDialog from "./view-employee"
+import EditEmployeeDialog from "./edit-employee"
+import { ScrollArea } from "@/components/ui/scroll-area"
 
 interface Employee {
   id: string
@@ -597,7 +593,7 @@ export const columns: ColumnDef<Employee>[] = [
   },
   {
     id: "actions",
-    cell: ({ row }) => {
+    cell: ({ row, table }) => {
       const employee = row.original
 
       return (
@@ -610,12 +606,24 @@ export const columns: ColumnDef<Employee>[] = [
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem onClick={() => navigator.clipboard.writeText(employee.id)}>
-              Copy employee ID
+            <DropdownMenuItem
+              className="hover:cursor-pointer"
+              onClick={() => navigator.clipboard.writeText(employee.id)}
+            >
+              <Copy className="mr-2 h-4 w-4" /> Copy ID
             </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>View employee details</DropdownMenuItem>
-            <DropdownMenuItem>Edit employee</DropdownMenuItem>
+            <DropdownMenuItem
+              className="hover:cursor-pointer"
+              onClick={() => (table.options.meta as any).onView(employee)}
+            >
+              <Eye className="mr-2 h-4 w-4" /> View
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              className="hover:cursor-pointer"
+              onClick={() => (table.options.meta as any).onEdit(employee)}
+            >
+              <Pencil className="mr-2 h-4 w-4" /> Edit
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       )
@@ -623,22 +631,30 @@ export const columns: ColumnDef<Employee>[] = [
   },
 ]
 
-export default function EmployeeListTable() {
+interface DataTableProps<TData, TValue> {
+  columns: ColumnDef<TData, TValue>[]
+  data: TData[]
+  onView: (item: TData) => void
+  onEdit: (item: TData) => void
+}
+
+function DataTable<TData, TValue>({ columns, data, onView, onEdit }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
-  const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({})
+  const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({
+    location: false,
+    manager: false,
+  })
   const [rowSelection, setRowSelection] = React.useState({})
-  const [startDate, setStartDate] = React.useState<Date>()
-  const [endDate, setEndDate] = React.useState<Date>()
 
   const table = useReactTable({
     data,
     columns,
-    onSortingChange: setSorting,
-    onColumnFiltersChange: setColumnFilters,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
+    onSortingChange: setSorting,
     getSortedRowModel: getSortedRowModel(),
+    onColumnFiltersChange: setColumnFilters,
     getFilteredRowModel: getFilteredRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
     onRowSelectionChange: setRowSelection,
@@ -648,20 +664,11 @@ export default function EmployeeListTable() {
       columnVisibility,
       rowSelection,
     },
+    meta: {
+      onView,
+      onEdit,
+    },
   })
-
-  // Get unique values for filter options
-  const departments = Array.from(new Set(data.map((item) => item.department)))
-  const jobTitles = Array.from(new Set(data.map((item) => item.jobTitle)))
-  const statuses = Array.from(new Set(data.map((item) => item.status)))
-  const locations = Array.from(new Set(data.map((item) => item.location)))
-  const managers = Array.from(new Set(data.map((item) => item.manager)))
-
-  React.useEffect(() => {
-    if (startDate && endDate) {
-      table.getColumn("startDate")?.setFilterValue([startDate, endDate])
-    }
-  }, [startDate, endDate, table])
 
   return (
     <div className="w-full">
@@ -672,255 +679,69 @@ export default function EmployeeListTable() {
           onChange={(event) => table.getColumn("name")?.setFilterValue(event.target.value)}
           className="max-w-sm"
         />
-        <Popover>
-          <PopoverTrigger asChild>
-            <Button variant="outline" className="ml-auto">
-              <Filter className="mr-2 h-4 w-4" />
-              Filter
-              {table.getState().columnFilters.length > 0 && (
-                <Badge variant="secondary" className="ml-2 rounded-sm px-1 font-normal lg:hidden">
-                  {table.getState().columnFilters.length}
-                </Badge>
-              )}
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent className="w-80">
-            <div className="grid gap-4">
-              <div className="space-y-2">
-                <h4 className="font-medium leading-none">Filters</h4>
-                <p className="text-sm text-muted-foreground">Filter employees by various criteria.</p>
-              </div>
-              <div className="grid gap-2">
-                <div className="grid gap-1">
-                  <label htmlFor="name" className="text-sm font-medium">
-                    Employee Name
-                  </label>
-                  <Input
-                    id="name"
-                    placeholder="Filter by name"
-                    value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
-                    onChange={(event) => table.getColumn("name")?.setFilterValue(event.target.value)}
-                  />
-                </div>
-                <div className="grid gap-1">
-                  <label htmlFor="employeeId" className="text-sm font-medium">
-                    Employee ID
-                  </label>
-                  <Input
-                    id="employeeId"
-                    placeholder="Filter by ID"
-                    value={(table.getColumn("employeeId")?.getFilterValue() as string) ?? ""}
-                    onChange={(event) => table.getColumn("employeeId")?.setFilterValue(event.target.value)}
-                  />
-                </div>
-                <div className="grid gap-1">
-                  <label htmlFor="department" className="text-sm font-medium">
-                    Department
-                  </label>
-                  <Select
-                    onValueChange={(value) =>
-                      table.getColumn("department")?.setFilterValue(value === "all" ? "" : value)
-                    }
-                  >
-                    <SelectTrigger id="department">
-                      <SelectValue placeholder="Select department" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">All Departments</SelectItem>
-                      {departments.map((dept) => (
-                        <SelectItem key={dept} value={dept}>
-                          {dept}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="grid gap-1">
-                  <label htmlFor="jobTitle" className="text-sm font-medium">
-                    Job Title
-                  </label>
-                  <Select
-                    onValueChange={(value) => table.getColumn("jobTitle")?.setFilterValue(value === "all" ? "" : value)}
-                  >
-                    <SelectTrigger id="jobTitle">
-                      <SelectValue placeholder="Select job title" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">All Job Titles</SelectItem>
-                      {jobTitles.map((title) => (
-                        <SelectItem key={title} value={title}>
-                          {title}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="grid gap-1">
-                  <label htmlFor="status" className="text-sm font-medium">
-                    Status
-                  </label>
-                  <Select
-                    onValueChange={(value) => table.getColumn("status")?.setFilterValue(value === "all" ? "" : value)}
-                  >
-                    <SelectTrigger id="status">
-                      <SelectValue placeholder="Select status" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">All Statuses</SelectItem>
-                      {statuses.map((status) => (
-                        <SelectItem key={status} value={status}>
-                          {status}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="grid gap-1">
-                  <label htmlFor="location" className="text-sm font-medium">
-                    Location
-                  </label>
-                  <Select
-                    onValueChange={(value) => table.getColumn("location")?.setFilterValue(value === "all" ? "" : value)}
-                  >
-                    <SelectTrigger id="location">
-                      <SelectValue placeholder="Select location" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">All Locations</SelectItem>
-                      {locations.map((location) => (
-                        <SelectItem key={location} value={location}>
-                          {location}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="grid gap-1">
-                  <label htmlFor="manager" className="text-sm font-medium">
-                    Manager
-                  </label>
-                  <Select
-                    onValueChange={(value) => table.getColumn("manager")?.setFilterValue(value === "all" ? "" : value)}
-                  >
-                    <SelectTrigger id="manager">
-                      <SelectValue placeholder="Select manager" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">All Managers</SelectItem>
-                      {managers.map((manager) => (
-                        <SelectItem key={manager} value={manager || "unassigned"}>
-                          {manager || "Unassigned"}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="grid gap-1">
-                  <label className="text-sm font-medium">Start Date Range</label>
-                  <div className="flex space-x-2">
-                    <Popover>
-                      <PopoverTrigger asChild>
-                        <Button
-                          variant={"outline"}
-                          className={`w-[140px] justify-start text-left font-normal ${
-                            !startDate && "text-muted-foreground"
-                          }`}
-                        >
-                          <CalendarIcon className="mr-2 h-4 w-4" />
-                          {startDate ? format(startDate, "PPP") : <span>Pick a date</span>}
-                        </Button>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-auto p-0" align="start">
-                        <Calendar mode="single" selected={startDate} onSelect={setStartDate} initialFocus />
-                      </PopoverContent>
-                    </Popover>
-                    <Popover>
-                      <PopoverTrigger asChild>
-                        <Button
-                          variant={"outline"}
-                          className={`w-[140px] justify-start text-left font-normal ${
-                            !endDate && "text-muted-foreground"
-                          }`}
-                        >
-                          <CalendarIcon className="mr-2 h-4 w-4" />
-                          {endDate ? format(endDate, "PPP") : <span>Pick a date</span>}
-                        </Button>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-auto p-0" align="start">
-                        <Calendar mode="single" selected={endDate} onSelect={setEndDate} initialFocus />
-                      </PopoverContent>
-                    </Popover>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </PopoverContent>
-        </Popover>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="ml-auto">
-              Columns <ChevronDown className="ml-2 h-4 w-4" />
+              <ListCollapseIcon />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            {table
-              .getAllColumns()
-              .filter((column) => column.getCanHide())
-              .map((column) => {
-                return (
-                  <DropdownMenuCheckboxItem
-                    key={column.id}
-                    className="capitalize"
-                    checked={column.getIsVisible()}
-                    onCheckedChange={(value) => column.toggleVisibility(!!value)}
-                  >
-                    {column.id}
-                  </DropdownMenuCheckboxItem>
-                )
-              })}
+            <ScrollArea className="h-[200px] w-[200px]">
+              {table
+                .getAllColumns()
+                .filter((column) => column.getCanHide())
+                .map((column) => {
+                  return (
+                    <DropdownMenuCheckboxItem
+                      key={column.id}
+                      checked={column.getIsVisible()}
+                      onCheckedChange={(value) => column.toggleVisibility(!!value)}
+                    >
+                      {column.id}
+                    </DropdownMenuCheckboxItem>
+                  )
+                })}
+              </ScrollArea>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
       <div className="rounded-md border">
-        <div className="overflow-x-auto min-w-[1000px]">
-          <Table>
-            <TableHeader>
-              {table.getHeaderGroups().map((headerGroup) => (
-                <TableRow key={headerGroup.id}>
-                  {headerGroup.headers.map((header) => {
-                    return (
-                      <TableHead key={header.id}>
-                        {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
-                      </TableHead>
-                    )
-                  })}
+        <Table>
+          <TableHeader>
+            {table.getHeaderGroups().map((headerGroup) => (
+              <TableRow key={headerGroup.id}>
+                {headerGroup.headers.map((header) => {
+                  return (
+                    <TableHead key={header.id}>
+                      {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
+                    </TableHead>
+                  )
+                })}
+              </TableRow>
+            ))}
+          </TableHeader>
+          <TableBody>
+            {table.getRowModel().rows?.length ? (
+              table.getRowModel().rows.map((row) => (
+                <TableRow key={row.id} data-state={row.getIsSelected() && "selected"}>
+                  {row.getVisibleCells().map((cell) => (
+                    <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
+                  ))}
                 </TableRow>
-              ))}
-            </TableHeader>
-            <TableBody>
-              {table.getRowModel().rows?.length ? (
-                table.getRowModel().rows.map((row) => (
-                  <TableRow key={row.id} data-state={row.getIsSelected() && "selected"}>
-                    {row.getVisibleCells().map((cell) => (
-                      <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
-                    ))}
-                  </TableRow>
-                ))
-              ) : (
-                <TableRow>
-                  <TableCell colSpan={columns.length} className="h-24 text-center">
-                    No results.
-                  </TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </div>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell colSpan={columns.length} className="h-24 text-center">
+                  No results.
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
       </div>
       <div className="flex items-center justify-end space-x-2 py-4">
         <div className="flex-1 text-sm text-muted-foreground">
-          {table.getFilteredSelectedRowModel().rows.length} of {table.getFilteredRowModel().rows.length} row(s)
-          selected.
+          {table.getFilteredRowModel().rows.length} of {data.length} row(s) selected.
         </div>
         <div className="space-x-2">
           <Button
@@ -936,6 +757,49 @@ export default function EmployeeListTable() {
           </Button>
         </div>
       </div>
+    </div>
+  )
+}
+
+export default function EmployeeListTable() {
+  const [viewEmployee, setViewEmployee] = React.useState<Employee | null>(null)
+  const [editEmployee, setEditEmployee] = React.useState<Employee | null>(null)
+
+  const handleView = (employee: Employee) => {
+    setViewEmployee(employee)
+  }
+
+  const handleEdit = (employee: Employee) => {
+    setEditEmployee(employee)
+  }
+
+  const handleCloseView = () => {
+    setViewEmployee(null)
+  }
+
+  const handleCloseEdit = () => {
+    setEditEmployee(null)
+  }
+
+  const handleSaveEdit = (updatedEmployee: Employee) => {
+    // Here you would typically update the data in your backend
+    // For this example, we'll just log the updated employee
+    console.log("Updated employee:", updatedEmployee)
+    setEditEmployee(null)
+  }
+
+  return (
+    <div className="container mx-auto py-10">
+      <DataTable columns={columns} data={data} onView={handleView} onEdit={handleEdit} />
+      {viewEmployee && <ViewEmployeeDialog employee={viewEmployee} open={!!viewEmployee} onClose={handleCloseView} />}
+      {editEmployee && (
+        <EditEmployeeDialog
+          employee={editEmployee}
+          open={!!editEmployee}
+          onClose={handleCloseEdit}
+          onSave={handleSaveEdit}
+        />
+      )}
     </div>
   )
 }

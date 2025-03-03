@@ -27,6 +27,7 @@ import PaginationSelection from "./PaginationState"
 import { ChevronLeft, ChevronRight, Download, File, FileText, ListCollapseIcon, Sheet } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
+import { ScrollArea } from "@/components/ui/scroll-area"
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
@@ -117,26 +118,28 @@ export default function DataTable<TData, TValue>({ columns, data, isLoading }: D
           </DropdownMenu>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="outline" className="ml-auto">
+              <Button variant="ghost" className="ml-auto">
                 <ListCollapseIcon />
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="h-[200px] overflow-y-scroll" align="end">
-              {table
-                .getAllColumns()
-                .filter((column) => column.getCanHide())
-                .map((column) => {
-                  return (
-                    <DropdownMenuCheckboxItem
-                      key={column.id}
-                      className="capitalize"
-                      checked={column.getIsVisible()}
-                      onCheckedChange={(value) => column.toggleVisibility(!!value)}
-                    >
-                      {column.id}
-                    </DropdownMenuCheckboxItem>
-                  )
-                })}
+            <DropdownMenuContent align="end">
+              <ScrollArea className="h-[200px] w-[200px] rounded-md">
+                {table
+                  .getAllColumns()
+                  .filter((column) => column.getCanHide())
+                  .map((column) => {
+                    return (
+                      <DropdownMenuCheckboxItem
+                        key={column.id}
+                        className="capitalize"
+                        checked={column.getIsVisible()}
+                        onCheckedChange={(value) => column.toggleVisibility(!!value)}
+                      >
+                        {column.id}
+                      </DropdownMenuCheckboxItem>
+                    )
+                  })}
+              </ScrollArea>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>

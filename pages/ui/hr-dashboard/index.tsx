@@ -12,7 +12,7 @@ import {
   TabsTrigger,
 } from "@/components/ui/tabs"
 import HeadCount from "./head-count"
-import RecentSales from "./recent-sales"
+import NewHires from "./new-hires"
 import { useState } from "react"
 import { SignalHigh, UserRoundCheck, UserRoundPlus, Users } from "lucide-react"
 
@@ -194,13 +194,13 @@ export default function HRDashboard() {
                 </Card>
                 <Card className="col-span-3 w-full">
                   <CardHeader>
-                    <CardTitle>Employees List</CardTitle>
+                    <CardTitle>New Hires</CardTitle>
                     <CardDescription>
-                      You made 265 sales this month.
+                      New hires of this month.
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <RecentSales />
+                    <NewHires />
                   </CardContent>
                 </Card>
               </div>
