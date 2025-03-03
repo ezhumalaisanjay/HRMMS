@@ -39,6 +39,8 @@ import {
 } from "@/components/ui/popover";
 import { useToast } from "@/components/ui/use-toast";
 import { cn } from "@/lib/utils";
+
+// AWS Amplify
 import { generateClient } from "aws-amplify/data";
 import type { Schema } from "@/amplify/data/resource";
 import { Amplify } from "aws-amplify";
@@ -64,7 +66,6 @@ const formSchema = z
       .string()
       .min(10, "Reason must be at least 10 characters")
       .max(500, "Reason must not exceed 500 characters"),
-    attachment: z.any().optional(),
   })
   .refine((data) => data.endDate >= data.startDate, {
     message: "End date must be after start date",
@@ -85,18 +86,22 @@ export default function LeaveRequestPage() {
       startDate: undefined,
       endDate: undefined,
       reason: "",
-      attachment: undefined,
     },
   });
 
   async function onSubmit(data: FormValues) {
     try {
       setIsSubmitting(true);
+
+      // Store data in AWS Amplify
       await client.models.LeaveRequest.create({
-        ...data,
+        leaveType: data.leaveType,
         startDate: data.startDate.toISOString(),
         endDate: data.endDate.toISOString(),
+        reason: data.reason,
       });
+
+      // Calculate points
       const today = new Date();
       const daysInAdvance = differenceInDays(data.startDate, today);
       let points =
@@ -108,10 +113,12 @@ export default function LeaveRequestPage() {
           ? 25
           : 10;
       setPointsEarned(points);
+
       toast({
         title: "Success",
         description: `Your leave request has been submitted. You earned ${points} points!`,
       });
+
       form.reset();
     } catch (error) {
       toast({
@@ -129,6 +136,7 @@ export default function LeaveRequestPage() {
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <CardContent className="space-y-6">
+            {/* Leave Type */}
             <FormField
               control={form.control}
               name="leaveType"
@@ -156,7 +164,75 @@ export default function LeaveRequestPage() {
                 </FormItem>
               )}
             />
+
+            {/* Start Date & End Date */}
+            <div className="grid gap-6 md:grid-cols-2">
+              {["startDate", "endDate"].map((name) => (
+                <FormField
+                  key={name}
+                  control={form.control}
+                  name={name}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>
+                        {name === "startDate" ? "Start Date" : "End Date"}
+                      </FormLabel>
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <FormControl>
+                            <Button
+                              variant="outline"
+                              className={cn(
+                                "w-full pl-3 text-left font-normal",
+                                !field.value && "text-muted-foreground"
+                              )}
+                            >
+                              {field.value ? (
+                                format(field.value, "PPP")
+                              ) : (
+                                <span>Pick a date</span>
+                              )}
+                              <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                            </Button>
+                          </FormControl>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-auto p-0" align="start">
+                          <Calendar
+                            mode="single"
+                            selected={field.value}
+                            onSelect={field.onChange}
+                            disabled={(date) => date < new Date()}
+                            initialFocus
+                          />
+                        </PopoverContent>
+                      </Popover>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              ))}
+            </div>
+
+            {/* Reason */}
+            <FormField
+              control={form.control}
+              name="reason"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Reason</FormLabel>
+                  <FormControl>
+                    <Textarea
+                      placeholder="Provide a detailed reason"
+                      className="min-h-[100px]"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
           </CardContent>
+
           <CardFooter>
             <Button type="submit" className="w-full" disabled={isSubmitting}>
               {isSubmitting ? (
@@ -171,6 +247,12 @@ export default function LeaveRequestPage() {
           </CardFooter>
         </form>
       </Form>
+      {pointsEarned > 0 && (
+        <div className="mt-4 p-4 bg-green-100 text-green-800 rounded-md">
+          <p className="font-semibold">Congratulations!</p>
+          <p>You earned {pointsEarned} points!</p>
+        </div>
+      )}
     </Card>
   );
 }
