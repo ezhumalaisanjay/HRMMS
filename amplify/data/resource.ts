@@ -14,7 +14,7 @@ const schema = a.schema({
       startDate: a.string(),
       endDate: a.string(),
       reason: a.string(),
-      attachmentUrl: a.string().optional(),
+     
     })
     .authorization((allow) => [allow.publicApiKey()]),
 });
