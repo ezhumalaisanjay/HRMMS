@@ -98,10 +98,18 @@ const UsersListTable = () => {
     {
       accessorKey: "tenant",
       header: "Tenant",
+      filterFn: (row, columnId, filterValue: string) => {
+        const rowValue = row.getValue(columnId) as string
+        return filterValue === "all" || rowValue === filterValue
+      },
     },
     {
       accessorKey: "group",
       header: "Group",
+      filterFn: (row, columnId, filterValue: string) => {
+        const rowValue = row.getValue(columnId) as string
+        return filterValue === "all" || rowValue === filterValue
+      },
     },
     {
       id: "modify",

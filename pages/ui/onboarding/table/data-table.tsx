@@ -66,6 +66,8 @@ export default function DataTable<TData, TValue>({ columns, data, isLoading }: D
     panNumber: false,
     presentAddress: false,
     Address: false,
+    School: false,
+    Company: false,
   })
   const [mounted, setMounted] = useState(false)
   const [drawerOpen, setDrawerOpen] = useState(false);

@@ -20,6 +20,13 @@ import {
 } from "@/components/ui/select"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import Image from "next/image"
+import { Amplify } from "aws-amplify"
+import outputs from "@/amplify_outputs.json"
+import { generateClient } from "aws-amplify/api"
+import { Schema } from "@/amplify/data/resource"
+
+Amplify.configure(outputs);
+const client = generateClient<Schema>()
 
 // Define the form schema with Zod
 const formSchema = z.object({
@@ -164,11 +171,47 @@ function AddCandidateForm({ data, close, onSubmit: propOnSubmit }: AddCandidateF
   }, [data, form])
 
   // Handle form submission
-  function handleSubmit(formData: FormValues) {
-    console.log(formData)
+  async function handleSubmit(formData: FormValues) {
     // Call the onSubmit prop if provided
     if (propOnSubmit) {
       propOnSubmit(formData)
+    }
+
+    try {
+      // Store data in AWS Amplify
+      await client.models.Onboarding.create({
+        email: formData.email,
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        phoneCountryCode: formData.phone.countryCode,
+        phoneNumber: formData.phone.number,
+        uanNumber: formData.uanNumber,
+        officialEmail: formData.officialEmail,
+        aadharNumber: formData.aadharNumber,
+        panNumber: formData.panNumber,
+        
+        // Present Address
+        presentAddressLine1: formData.presentAddress.line1,
+        presentAddressLine2: formData.presentAddress.line2,
+        presentAddressCity: formData.presentAddress.city,
+        presentAddressCountry: formData.presentAddress.country,
+        presentAddressState: formData.presentAddress.state,
+        presentAddressPostalCode: formData.presentAddress.postalCode,
+        
+        // Permanent Address
+        permanentAddressSameAsPresent: formData.permanentAddress.sameAsPresent,
+        permanentAddressLine1: formData.permanentAddress.line1,
+        permanentAddressLine2: formData.permanentAddress.line2,
+        permanentAddressCity: formData.permanentAddress.city,
+        permanentAddressCountry: formData.permanentAddress.country,
+        permanentAddressState: formData.permanentAddress.state,
+        permanentAddressPostalCode: formData.permanentAddress.postalCode,
+      })
+      console.log("Onboarding Form data : ", formData)
+
+      form.reset()
+    } catch (error) {
+      console.error(error)
     }
 
     close();

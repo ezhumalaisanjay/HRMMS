@@ -53,8 +53,8 @@ export default function DataTable<TData, TValue>({ columns, data, isLoading }: D
   })
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
   const [mounted, setMounted] = useState(false)
-  const [tenantFilter, setTenantFilter] = useState<string>("")
-  const [groupFilter, setGroupFilter] = useState<string>("")
+  const [tenantFilter, setTenantFilter] = useState<string>("all")
+  const [groupFilter, setGroupFilter] = useState<string>("all")
 
   useEffect(() => {
     setMounted(true)
@@ -78,17 +78,22 @@ export default function DataTable<TData, TValue>({ columns, data, isLoading }: D
       pagination,
     },
     filterFns: {
-      tenantAndGroup: (row, columnId, filterValue) => {
-        const { tenant, group } = filterValue
-        const rowTenant = row.getValue("tenant") as string
-        const rowGroup = row.getValue("group") as string
-        return (tenant === "" || rowTenant === tenant) && (group === "" || rowGroup === group)
+      tenantFilter: (row, id, filterValue) => {
+        const rowValue = row.getValue(id) as string
+        return filterValue === "all" || rowValue === filterValue
+      },
+      groupFilter: (row, id, filterValue) => {
+        const rowValue = row.getValue(id) as string
+        return filterValue === "all" || rowValue === filterValue
       },
     },
   })
 
   useEffect(() => {
-    table.setColumnFilters([{ id: "tenant", value: { tenant: tenantFilter, group: groupFilter } }])
+    if (table.getColumn("tenant") && table.getColumn("group")) {
+      table.getColumn("tenant")?.setFilterValue(tenantFilter)
+      table.getColumn("group")?.setFilterValue(groupFilter)
+    }
   }, [tenantFilter, groupFilter, table])
 
   if (!mounted) {
@@ -103,9 +108,9 @@ export default function DataTable<TData, TValue>({ columns, data, isLoading }: D
     )
   }
 
-  // Assuming you have a list of tenants and groups
-  const tenants = ["Tenant1", "Tenant2", "Tenant3"]
-  const groups = ["Group1", "Group2", "Group3"]
+  // Get unique tenants and groups from the data
+  const tenants = Array.from(new Set(data.map((item: any) => item.tenant)))
+  const groups = Array.from(new Set(data.map((item: any) => item.group)))
 
   return (
     <div>

@@ -94,7 +94,7 @@ export default function EmployeeLeaveBalanceAndHistoryPage() {
           <DrawerTrigger asChild>
             <Button variant={"secondary"}>Add Leave</Button>
           </DrawerTrigger>
-          <DrawerContent className="m-4 h-full 2xl:h-max">
+          <DrawerContent className=" h-full 2xl:h-max">
             <DrawerHeader>
               <div className="flex justify-between items-center">
                 <div>
