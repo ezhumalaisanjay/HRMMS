@@ -24,7 +24,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import PaginationSelection from "./PaginationState"
-import { ChevronLeft, ChevronRight, Download, File, FileSpreadsheet, FileText, ListCollapseIcon, ListFilter, X } from "lucide-react"
+import { ChevronLeft, ChevronRight, Download, File, FileSpreadsheet, FileText, ListCollapseIcon, ListFilter, Loader2, X } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetFooter, SheetTrigger } from "@/components/ui/sheet"
@@ -65,6 +65,7 @@ export default function DataTable<TData, TValue>({ columns, data, isLoading }: D
     officialEmail: false,
     panNumber: false,
     presentAddress: false,
+    Address: false,
   })
   const [mounted, setMounted] = useState(false)
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -106,7 +107,11 @@ export default function DataTable<TData, TValue>({ columns, data, isLoading }: D
   }
 
   if (isLoading) {
-    return <div>Loading...</div>
+    return (
+    <div className="flex justify-center items-center h-[50vh]">
+      <Loader2 className="h-8 w-8 animate-spin" />
+    </div>
+    );
   }
 
   return (

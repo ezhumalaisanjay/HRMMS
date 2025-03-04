@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react"
 import { format } from "date-fns"
-import { CalendarIcon, Loader2 } from "lucide-react"
+import { CalendarIcon, Loader2, X } from "lucide-react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
@@ -12,7 +12,7 @@ import { Badge } from "@/components/ui/badge"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { Calendar } from "@/components/ui/calendar"
 import { cn } from "@/lib/utils"
-import { Drawer, DrawerContent, DrawerDescription, DrawerHeader, DrawerTitle, DrawerTrigger } from "@/components/ui/drawer"
+import { Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerHeader, DrawerTitle, DrawerTrigger } from "@/components/ui/drawer"
 import LeaveRequestPage from "../leave-request"
 
 type LeaveBalance = {
@@ -96,8 +96,13 @@ export default function EmployeeLeaveBalanceAndHistoryPage() {
           </DrawerTrigger>
           <DrawerContent className="m-4 h-full 2xl:h-max">
             <DrawerHeader>
-              <DrawerTitle>Submit Leave Request</DrawerTitle>
-              <DrawerDescription>Fill out the form below to submit your leave request.</DrawerDescription>
+              <div className="flex justify-between items-center">
+                <div>
+                  <DrawerTitle>Submit Leave Request</DrawerTitle>
+                  <DrawerDescription>Fill out the form below to submit your leave request.</DrawerDescription>
+                </div>
+                <DrawerClose> <X /> </DrawerClose>
+              </div>
             </DrawerHeader>
             <LeaveRequestPage />
           </DrawerContent>

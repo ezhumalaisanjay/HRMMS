@@ -4,7 +4,7 @@ import { ThemeProvider } from "@/components/ui/theme-provider"
 import EmployeeListTable from "@/pages/ui/employee-list"
 import SiteHeader from "@/pages/ui/header"
 import AppSidebar from "@/pages/ui/sidebar"
-import UsersListTable from "@/pages/ui/users-list/page"
+import UsersListTable from "@/pages/ui/users-list/table/index"
 import { CalendarDays, CalendarX, Frame, PackagePlus, PersonStanding } from "lucide-react"
 import { useEffect, useState } from "react"
 

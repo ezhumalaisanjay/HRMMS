@@ -662,7 +662,7 @@ const UsersListTable = () => {
       header: "Email",
     },
     {
-      accessorKey: "phone.number",
+      accessorFn: (row) => `${row.phone.countryCode} ${row.phone.number}`,
       header: "Phone No",
     },
     {
@@ -670,11 +670,11 @@ const UsersListTable = () => {
       header: "City",
     },
     {
-      accessorKey: "education[0].schoolName",
+      accessorFn: (row) => row.education[0]?.schoolName || "N/A",
       header: "School",
     },
     {
-      accessorKey: "experience[0].company",
+      accessorFn: (row) => row.experience[0]?.company || "N/A",
       header: "Company",
     },
     {
@@ -694,8 +694,11 @@ const UsersListTable = () => {
       header: "PAN",
     },
     {
-      accessorKey: "presentAddress",
-      header: "address",
+      accessorFn: (row) => {
+        const addr = row.presentAddress
+        return `${addr.line1}, ${addr.city}, ${addr.state || ""}, ${addr.country} ${addr.postalCode}`
+      },
+      header: "Address",
     },
     {
       id: "modify",
@@ -719,10 +722,10 @@ const UsersListTable = () => {
               </DropdownMenuItem>
               <Drawer>
                 <DrawerTrigger asChild>
-                  <Button variant="ghost" className="h-8 w-full p-0">
+                  <Button variant="ghost" className="h-8 w-full p-2">
                     <div className="flex gap-2 w-full justify-start items-center">
                       <Pencil className="h-4 w-4" />
-                      <span className="font-light">Edit</span>
+                      <span className="font-normal">Edit</span>
                     </div>
                   </Button>
                 </DrawerTrigger>

@@ -789,7 +789,7 @@ export default function EmployeeListTable() {
   }
 
   return (
-    <div className="container mx-auto py-10">
+    <div className="container mx-auto">
       <DataTable columns={columns} data={data} onView={handleView} onEdit={handleEdit} />
       {viewEmployee && <ViewEmployeeDialog employee={viewEmployee} open={!!viewEmployee} onClose={handleCloseView} />}
       {editEmployee && (

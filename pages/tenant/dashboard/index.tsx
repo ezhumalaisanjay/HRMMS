@@ -2,7 +2,7 @@ import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
 import { ThemeProvider } from "@/components/ui/theme-provider"
 import SiteHeader from "@/pages/ui/header/index"
 import AppSidebar from "@/pages/ui/sidebar/index"
-import TenetDashboard from "@/pages/ui/tenet-dashboard"
+import TenetDashboard from "@/pages/ui/dashboard/tenet-dashboard"
 import { Frame, PieChart } from "lucide-react"
 import { useState } from "react"
 

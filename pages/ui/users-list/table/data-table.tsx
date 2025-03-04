@@ -24,10 +24,11 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import PaginationSelection from "./PaginationState"
-import { ChevronLeft, ChevronRight, Download, File, FileText, ListCollapseIcon, Sheet } from "lucide-react"
+import { ChevronLeft, ChevronRight, Download, File, FileText, ListCollapseIcon, Loader2, Sheet } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { ScrollArea } from "@/components/ui/scroll-area"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
@@ -52,6 +53,8 @@ export default function DataTable<TData, TValue>({ columns, data, isLoading }: D
   })
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
   const [mounted, setMounted] = useState(false)
+  const [tenantFilter, setTenantFilter] = useState<string>("")
+  const [groupFilter, setGroupFilter] = useState<string>("")
 
   useEffect(() => {
     setMounted(true)
@@ -74,26 +77,72 @@ export default function DataTable<TData, TValue>({ columns, data, isLoading }: D
       columnVisibility,
       pagination,
     },
+    filterFns: {
+      tenantAndGroup: (row, columnId, filterValue) => {
+        const { tenant, group } = filterValue
+        const rowTenant = row.getValue("tenant") as string
+        const rowGroup = row.getValue("group") as string
+        return (tenant === "" || rowTenant === tenant) && (group === "" || rowGroup === group)
+      },
+    },
   })
+
+  useEffect(() => {
+    table.setColumnFilters([{ id: "tenant", value: { tenant: tenantFilter, group: groupFilter } }])
+  }, [tenantFilter, groupFilter, table])
 
   if (!mounted) {
     return null
   }
 
   if (isLoading) {
-    return <div>Loading...</div>
+    return (
+      <div className="flex justify-center items-center h-[50vh]">
+        <Loader2 className="h-8 w-8 animate-spin" />
+      </div>
+    )
   }
+
+  // Assuming you have a list of tenants and groups
+  const tenants = ["Tenant1", "Tenant2", "Tenant3"]
+  const groups = ["Group1", "Group2", "Group3"]
 
   return (
     <div>
       <div className="flex justify-between items-center p-2">
-        <div className="flex w-full">
+        <div className="flex w-full gap-2">
           <Input
             placeholder="Search Name..."
             value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
             onChange={(event) => table.getColumn("name")?.setFilterValue(event.target.value)}
-            className="max-w-sm ml-2"
+            className="max-w-sm"
           />
+          <Select value={tenantFilter} onValueChange={setTenantFilter}>
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Select Tenant" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Tenants</SelectItem>
+              {tenants.map((tenant) => (
+                <SelectItem key={tenant} value={tenant}>
+                  {tenant}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <Select value={groupFilter} onValueChange={setGroupFilter}>
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Select Group" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Groups</SelectItem>
+              {groups.map((group) => (
+                <SelectItem key={group} value={group}>
+                  {group}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
         <div className="flex">
           <DropdownMenu>

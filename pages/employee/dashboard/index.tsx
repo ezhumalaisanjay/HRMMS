@@ -4,7 +4,7 @@ import SiteHeader from "@/pages/ui/header/index"
 import AppSidebar from "@/pages/ui/sidebar/index"
 import { CalendarDays, CalendarX, Frame, } from "lucide-react"
 import { useState } from "react"
-import EmployeeProfileDashboard from "@/pages/ui/employee-dashboard"
+import EmployeeProfileDashboard from "@/pages/ui/dashboard/employee-dashboard"
 
 
 export default function Dashboard() {
