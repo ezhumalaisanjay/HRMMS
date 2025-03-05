@@ -1,6 +1,18 @@
 import { type ClientSchema, a, defineData } from "@aws-amplify/backend";
 
 const schema = a.schema({
+  // ✅ Define the Tenants model
+  Tenants: a
+    .model({
+      tenant_name: a.string().required(), // Primary Key
+      user_pool_id: a.string().required(),
+      client_id: a.string().required(),
+      admin_email: a.string().required(),
+      admin_name: a.string().required(),
+      phone_number: a.string().required(),
+    })
+    .authorization((allow) => [allow.publicApiKey()]),
+
   Todo: a
     .model({
       content: a.string(),
@@ -17,70 +29,36 @@ const schema = a.schema({
     })
     .authorization((allow) => [allow.publicApiKey()]),
 
-    Onboarding: a
-      .model({
-        email: a.string().required(),
-        firstName: a.string().required(),
-        lastName: a.string().required(),
-        phoneCountryCode: a.string().required(),
-        phoneNumber: a.string().required(),
-        uanNumber: a.string(),
-        officialEmail: a.string(),
-        aadharNumber: a.string(),
-        panNumber: a.string(),
-        
-        // Present Address
-        presentAddressLine1: a.string(),
-        presentAddressLine2: a.string(),
-        presentAddressCity: a.string(),
-        presentAddressCountry: a.string(),
-        presentAddressState: a.string(),
-        presentAddressPostalCode: a.string(),
-        
-        // Permanent Address
-        permanentAddressSameAsPresent: a.boolean().default(false),
-        permanentAddressLine1: a.string(),
-        permanentAddressLine2: a.string(),
-        permanentAddressCity: a.string(),
-        permanentAddressCountry: a.string(),
-        permanentAddressState: a.string(),
-        permanentAddressPostalCode: a.string(),
-        
-        // Relationships
-        // educations: a.hasMany('Education', 'onboardingID'),
-        // experiences: a.hasMany('Experience', 'onboardingID'),
-      })
-      .authorization((allow) => [allow.publicApiKey()]),
+  Onboarding: a
+    .model({
+      email: a.string().required(),
+      firstName: a.string().required(),
+      lastName: a.string().required(),
+      phoneCountryCode: a.string().required(),
+      phoneNumber: a.string().required(),
+      uanNumber: a.string(),
+      officialEmail: a.string(),
+      aadharNumber: a.string(),
+      panNumber: a.string(),
 
-    /*Education: a
-      .model({
-        schoolName: a.string(),
-        degree: a.string(),
-        fieldOfStudy: a.string(),
-        completionDate: a.string(),
-        notes: a.string(),
-        
-        // Reference field for relationship
-        onboardingID: a.id(),
-        // Relationship field
-        onboarding: a.belongsTo('Onboarding', 'onboardingID'),
-      })
-      .authorization((allow) => [allow.publicApiKey()]),
+      // Present Address
+      presentAddressLine1: a.string(),
+      presentAddressLine2: a.string(),
+      presentAddressCity: a.string(),
+      presentAddressCountry: a.string(),
+      presentAddressState: a.string(),
+      presentAddressPostalCode: a.string(),
 
-    Experience: a
-      .model({
-        occupation: a.string(),
-        company: a.string(),
-        summary: a.string(),
-        duration: a.string(),
-        schoolName: a.string(),
-        
-        // Reference field for relationship
-        onboardingID: a.id(),
-        // Relationship field
-        onboarding: a.belongsTo('Onboarding', 'onboardingID'),
-      })
-      .authorization((allow) => [allow.publicApiKey()]), */
+      // Permanent Address
+      permanentAddressSameAsPresent: a.boolean().default(false),
+      permanentAddressLine1: a.string(),
+      permanentAddressLine2: a.string(),
+      permanentAddressCity: a.string(),
+      permanentAddressCountry: a.string(),
+      permanentAddressState: a.string(),
+      permanentAddressPostalCode: a.string(),
+    })
+    .authorization((allow) => [allow.publicApiKey()]),
 });
 
 export type Schema = ClientSchema<typeof schema>;
